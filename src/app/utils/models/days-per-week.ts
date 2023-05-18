@@ -1,5 +1,5 @@
 export interface DaysPerWeek {
-    date: Date | number;
+    date: Date;
     dayOfWeek: number;
     events: CustomEvent[]
     outOfMonth?: boolean;

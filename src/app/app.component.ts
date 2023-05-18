@@ -36,8 +36,6 @@ export class AppComponent {
     let dayOfWeekCounter = firstDate.getDay() - 1;
     let dayOfWeek = firstDate.getDay() - 1;
      
-    console.log(firstDate);
-    console.log(dayOfWeek);
     for (let date = 1; date <= numDays; date++) {   
      if (dayOfWeekCounter === 0 || weeks.length === 0) weeks.push([]);
      if (isFirstWeek) {
@@ -68,6 +66,10 @@ export class AppComponent {
    }
  
    public openModalNewEvent(day: DaysPerWeek) {
+    if(day.outOfMonth) {
+      this.currentDate = new Date(day.date);
+      this.daysPerWeek = this.getWeeksInMonth(day.date.getFullYear(), day.date.getMonth())
+    }
      this.isAddingEvent = true;
      console.log("Dia seleccionado", day)
    }
