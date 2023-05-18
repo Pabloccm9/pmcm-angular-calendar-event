@@ -36,24 +36,27 @@ export class AppComponent {
     let dayOfWeekCounter = firstDate.getDay() - 1;
     let dayOfWeek = firstDate.getDay() - 1;
      
+    console.log(firstDate);
+    console.log(dayOfWeek);
     for (let date = 1; date <= numDays; date++) {   
      if (dayOfWeekCounter === 0 || weeks.length === 0) weeks.push([]);
      if (isFirstWeek) {
+      if(dayOfWeek === -1) dayOfWeek = 6;
        for (let i = 0; i < dayOfWeek; i++) {
          weeks[weeks.length - 1].push({ date: new Date(year, month, -(dayOfWeek-i-1)), dayOfWeek: i, events: [], outOfMonth: true });   
        }
        isFirstWeek = false;
      }
      weeks[weeks.length - 1].push({ date: new Date(year, month, date), dayOfWeek, events: [] });
-     if (dayOfWeek == 6) dayOfWeek = 0;
-     else dayOfWeek += 1;
-     dayOfWeekCounter = (dayOfWeekCounter + 1) % 7;
-     if(date === lastDate.getDate()) {
-      for(let i = dayOfWeek; i < 7; i++) {
-        date++;
-        weeks[weeks.length - 1].push({ date: new Date(year, month, date), dayOfWeek: i, events: [], outOfMonth: true });   
-      }
-     }   
+     if(date === numDays) {
+       for(let i = dayOfWeek+1; i < 7; i++) {
+         date++;
+         weeks[weeks.length - 1].push({ date: new Date(year, month, date), dayOfWeek: i, events: [], outOfMonth: true });   
+        }
+      }   
+      if (dayOfWeek == 6) dayOfWeek = 0;
+      else dayOfWeek += 1;
+      dayOfWeekCounter = (dayOfWeekCounter + 1) % 7;
     }
     return weeks.filter(w => !!w.length);    
    }
@@ -62,7 +65,6 @@ export class AppComponent {
      if(action == "+") this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1);
      else this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1);
      this.daysPerWeek = this.getWeeksInMonth(this.currentDate.getFullYear(), this.currentDate.getMonth());
-     console.log(this.daysPerWeek);
    }
  
    public openModalNewEvent(day: DaysPerWeek) {
@@ -76,7 +78,6 @@ export class AppComponent {
        description: this.eventForm.controls["description"].value,
        day: new Date(this.eventForm.controls["date"].value)
      }
-     console.log("evento guardado", event);
      this.isAddingEvent = false;
      this._initializeForm();
    }
