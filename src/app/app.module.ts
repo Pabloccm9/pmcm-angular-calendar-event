@@ -3,12 +3,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { CalendarViewComponent } from './components/calendar-view/calendar-view.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    CalendarViewComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,

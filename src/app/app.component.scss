@@ -1,0 +1,12 @@
+.week, .days {
+    display: flex;
+    width: 100%;
+    > div, span {
+        width: 14.3%;
+        border: 1px black solid;
+    }
+}
+
+.disabledDay {
+    background-color: lightgray;
+}
