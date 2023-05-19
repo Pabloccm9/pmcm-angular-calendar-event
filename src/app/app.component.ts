@@ -105,6 +105,12 @@ export class AppComponent {
       selectedDay.getDate() === this.currentDate.getDate();
   }
 
+  public closeAddEvent(): void {
+    this.isAddingEvent = false;
+    this.eventForm.controls["title"].setValue("");
+    this.eventForm.controls["description"].setValue("");
+  }
+
    public change(e: any) {
      console.log("change", e);
      this.currentDate = new Date(e);
