@@ -10,9 +10,12 @@
         <span *ngFor="let day of daysOfWeek">{{day}}</span>
     </div>
     <div class="week" *ngFor="let week of daysPerWeek">
-        <div  *ngFor="let day of week" (click)="openModalNewEvent(day)">
-            <div [ngClass]="{'disabledDay': day.outOfMonth}">{{day.date | date: 'd'}}</div>
-        </div>
+        <ng-container  *ngFor="let day of week">
+            <div (click)="openModalNewEvent(day)" [ngClass]="{
+                'disabledDay': day.outOfMonth, 
+                'activeDay': isSameDay(day.date)
+            }"><span>{{day.date | date: 'd'}}</span></div>
+        </ng-container>
     </div>
 </div>
 <div *ngIf="isAddingEvent">

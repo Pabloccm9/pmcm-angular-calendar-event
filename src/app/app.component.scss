@@ -2,11 +2,34 @@
     display: flex;
     width: 100%;
     > div, span {
+        display: flex;
+        justify-content: center;
         width: 14.3%;
-        border: 1px black solid;
+        padding: 5px 0px;
+    }
+
+    > div{
+        border: 0.5px black solid;
+    }
+    background-color: none;
+}
+
+.days {
+    background-color: black;
+    color: white;
+
+    > span {
+        display: flex;
+        justify-content: center;
     }
 }
 
 .disabledDay {
     background-color: lightgray;
+    color: gray;
+}
+
+.activeDay {
+    background-color: coral;
+    color: white;
 }

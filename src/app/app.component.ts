@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, HostListener } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { CustomEvent } from './utils/models/custom-event';
 import { DaysPerWeek } from './utils/models/days-per-week';
@@ -10,6 +10,19 @@ import { DaysPerWeek } from './utils/models/days-per-week';
 })
 export class AppComponent {
   @Input() events!: CustomEvent[];
+
+  // clickInside() {
+  //   console.log("clicked inside");
+  //   this.isAddingEvent = true;
+  // }
+
+  // @HostListener('document:click')
+  // clickout() {
+  //   if (!this.isAddingEvent) {
+  //     console.log("clicked outside");
+  //   }
+  //   this.isAddingEvent = false;
+  // }
 
   constructor() {
     this._initializeForm();
@@ -67,11 +80,10 @@ export class AppComponent {
  
    public openModalNewEvent(day: DaysPerWeek) {
     if(day.outOfMonth) {
-      this.currentDate = new Date(day.date);
       this.daysPerWeek = this.getWeeksInMonth(day.date.getFullYear(), day.date.getMonth())
     }
-     this.isAddingEvent = true;
-     console.log("Dia seleccionado", day)
+    this.currentDate = new Date(day.date);
+    this.isAddingEvent = true;
    }
  
    public saveEvent(e: Event) {
@@ -83,6 +95,12 @@ export class AppComponent {
      this.isAddingEvent = false;
      this._initializeForm();
    }
+
+   public isSameDay(selectedDay: Date):boolean {
+    return selectedDay.getFullYear() === this.currentDate.getFullYear() &&
+      selectedDay.getMonth() === this.currentDate.getMonth() &&
+      selectedDay.getDate() === this.currentDate.getDate();
+  }
  
    public change(e: Event) {
      console.log("change", e);
