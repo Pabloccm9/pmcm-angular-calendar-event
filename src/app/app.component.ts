@@ -26,6 +26,7 @@ export class AppComponent {
 
   constructor() {
     this._initializeForm();
+    // this.eventForm.controls["date"].valueChanges.subscribe(fecha => this.currentDate = new Date(fecha));
     this.daysPerWeek = this.getWeeksInMonth(this.currentDate.getFullYear(), this.currentDate.getMonth());
     console.log("Dias del mes", this.daysPerWeek);
   }
@@ -44,17 +45,17 @@ export class AppComponent {
     const weeks: Array<DaysPerWeek[]> = [],
      firstDate: Date = new Date(year, month, 1),
      lastDate: Date = new Date(year, month + 1, 0),
-     numDays: number = lastDate.getDate();   
- 
+     numDays: number = lastDate.getDate();
+
     let dayOfWeekCounter = firstDate.getDay() - 1;
     let dayOfWeek = firstDate.getDay() - 1;
-     
-    for (let date = 1; date <= numDays; date++) {   
+
+    for (let date = 1; date <= numDays; date++) {
      if (dayOfWeekCounter === 0 || weeks.length === 0) weeks.push([]);
      if (isFirstWeek) {
       if(dayOfWeek === -1) dayOfWeek = 6;
        for (let i = 0; i < dayOfWeek; i++) {
-         weeks[weeks.length - 1].push({ date: new Date(year, month, -(dayOfWeek-i-1)), dayOfWeek: i, events: [], outOfMonth: true });   
+         weeks[weeks.length - 1].push({ date: new Date(year, month, -(dayOfWeek-i-1)), dayOfWeek: i, events: [], outOfMonth: true });
        }
        isFirstWeek = false;
      }
@@ -62,30 +63,32 @@ export class AppComponent {
      if(date === numDays) {
        for(let i = dayOfWeek+1; i < 7; i++) {
          date++;
-         weeks[weeks.length - 1].push({ date: new Date(year, month, date), dayOfWeek: i, events: [], outOfMonth: true });   
+         weeks[weeks.length - 1].push({ date: new Date(year, month, date), dayOfWeek: i, events: [], outOfMonth: true });
         }
-      }   
+      }
       if (dayOfWeek == 6) dayOfWeek = 0;
       else dayOfWeek += 1;
       dayOfWeekCounter = (dayOfWeekCounter + 1) % 7;
     }
-    return weeks.filter(w => !!w.length);    
+    return weeks.filter(w => !!w.length);
    }
- 
+
    public changeMonth(action: string): void {
      if(action == "+") this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1);
      else this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1);
      this.daysPerWeek = this.getWeeksInMonth(this.currentDate.getFullYear(), this.currentDate.getMonth());
    }
- 
+
    public openModalNewEvent(day: DaysPerWeek) {
     if(day.outOfMonth) {
       this.daysPerWeek = this.getWeeksInMonth(day.date.getFullYear(), day.date.getMonth())
     }
     this.currentDate = new Date(day.date);
+    this.eventForm.controls["date"]
+      .setValue(new Date(day.date.getTime() + 2 * 60 * 60 * 1000).toISOString().split("T")[0]);
     this.isAddingEvent = true;
    }
- 
+
    public saveEvent(e: Event) {
      let event: CustomEvent = {
        title: this.eventForm.controls["title"].value,
@@ -101,11 +104,12 @@ export class AppComponent {
       selectedDay.getMonth() === this.currentDate.getMonth() &&
       selectedDay.getDate() === this.currentDate.getDate();
   }
- 
-   public change(e: Event) {
+
+   public change(e: any) {
      console.log("change", e);
+     this.currentDate = new Date(e);
    }
- 
+
    private _initializeForm(): void {
      this.eventForm = new UntypedFormGroup({
        title: new UntypedFormControl(""),
