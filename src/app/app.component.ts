@@ -9,25 +9,12 @@ import { DaysPerWeek } from './utils/models/days-per-week';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  @Input() events!: CustomEvent[];
-
-  // clickInside() {
-  //   console.log("clicked inside");
-  //   this.isAddingEvent = true;
-  // }
-
-  // @HostListener('document:click')
-  // clickout() {
-  //   if (!this.isAddingEvent) {
-  //     console.log("clicked outside");
-  //   }
-  //   this.isAddingEvent = false;
-  // }
+  @Input() events: CustomEvent[] = [{title: "a", description: "b", day: new Date()}];
 
   constructor() {
     this._initializeForm();
-    // this.eventForm.controls["date"].valueChanges.subscribe(fecha => this.currentDate = new Date(fecha));
     this.daysPerWeek = this.getWeeksInMonth(this.currentDate.getFullYear(), this.currentDate.getMonth());
+    this._initializeEvents();
     console.log("Dias del mes", this.daysPerWeek);
   }
 
@@ -95,14 +82,21 @@ export class AppComponent {
        description: this.eventForm.controls["description"].value,
        day: new Date(this.eventForm.controls["date"].value)
      }
+     this.daysPerWeek.forEach(week => {
+      week.forEach(day => {
+        if(this.isSameDay(day.date)) day.events.push(event as any);
+      })
+     })
+     console.log(this.daysPerWeek);
      this.isAddingEvent = false;
      this._initializeForm();
    }
 
-   public isSameDay(selectedDay: Date):boolean {
-    return selectedDay.getFullYear() === this.currentDate.getFullYear() &&
-      selectedDay.getMonth() === this.currentDate.getMonth() &&
-      selectedDay.getDate() === this.currentDate.getDate();
+   public isSameDay(selectedDay: Date, dayToCompare?: Date):boolean {
+    let day: Date = dayToCompare || this.currentDate;
+    return selectedDay.getFullYear() === day.getFullYear() &&
+      selectedDay.getMonth() === day.getMonth() &&
+      selectedDay.getDate() === day.getDate();
   }
 
   public closeAddEvent(): void {
@@ -122,5 +116,15 @@ export class AppComponent {
        description: new UntypedFormControl(""),
        date: new UntypedFormControl("")
      })
+   }
+
+   private _initializeEvents(): void {
+    this.daysPerWeek.forEach(week => {
+      week.forEach(day => {
+        this.events.forEach(event => {
+          if(this.isSameDay(day.date, event.day)) day.events.push(event as any)
+        })
+      })
+    })
    }
 }
